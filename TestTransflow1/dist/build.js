@@ -24,8 +24,8 @@ var TOPK = 10;
 
 var predictionThreshold = 0.98;
 
-var words = ["alexa", "hello", "other"];
-// var words = ["alexa", "hello", "what is", "the weather", "the time",
+var words = ["Begin", "hello", "other"];
+// var words = ["Begin", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
 
@@ -163,7 +163,7 @@ var Main = function () {
 
           // if wake word has not been trained
           if (exampleCount[0] == 0) {
-            alert('You haven\'t added examples for the wake word ALEXA');
+            alert('You haven\'t added examples for the wake word Begin');
             return;
           }
 
@@ -205,12 +205,12 @@ var Main = function () {
         // check if user has added atleast one terminal word
         if (words.length > 3 && endWords.length == 1) {
           console.log('no terminal word added');
-          alert('You have not added any terminal words.\nCurrently the only query you can make is "Alexa, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What\'s the weather" & "What\'s the time" then add "the weather" and "the time" as terminal words. "What\'s" on the other hand is not a terminal word.');
+          alert('You have not added any terminal words.\nCurrently the only query you can make is "Begin, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What\'s the weather" & "What\'s the time" then add "the weather" and "the time" as terminal words. "What\'s" on the other hand is not a terminal word.');
           return;
         }
 
         if (words.length == 3 && endWords.length == 1) {
-          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Alexa, hello'");
+          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Begin, hello'");
 
           if (!proceed) return;
         }
@@ -539,20 +539,20 @@ var TextToSpeech = function () {
     value: function speak(word) {
       var _this10 = this;
 
-      if (word == 'alexa') {
+      if (word == 'Begin') {
         console.log("clear para");
         this.clearPara(true);
 
         setTimeout(function () {
-          // if no query detected after alexa is signed
+          // if no query detected after Begin is signed
           if (_this10.currentPredictedWords.length == 1) {
             _this10.clearPara(false);
           }
         }, this.waitTimeForQuery);
       }
 
-      if (word != 'alexa' && this.currentPredictedWords.length == 0) {
-        console.log("first word should be alexa");
+      if (word != 'Begin' && this.currentPredictedWords.length == 0) {
+        console.log("first word should be Begin");
         console.log(word);
         return;
       }

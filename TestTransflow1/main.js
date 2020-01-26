@@ -9,8 +9,8 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98
 
-var words = ["ConuHacks", "hello", "other"]
-// var words = ["ConuHacks", "hello", "what is", "the weather", "the time",
+var words = ["Begin", "hello", "other"]
+// var words = ["Begin", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
 
@@ -142,7 +142,7 @@ class Main {
         // if wake word has not been trained
         if(exampleCount[0] == 0){
           alert(
-            `You haven't added examples for the wake word ConuHacks`
+            `You haven't added examples for the wake word Begin`
             )
           return
         }
@@ -188,12 +188,12 @@ class Main {
       // check if user has added atleast one terminal word
       if(words.length > 3 && endWords.length == 1){
         console.log('no terminal word added')
-        alert(`You have not added any terminal words.\nCurrently the only query you can make is "ConuHacks, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`)
+        alert(`You have not added any terminal words.\nCurrently the only query you can make is "Begin, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`)
         return
       }
 
       if(words.length == 3 && endWords.length ==1){
-        var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'ConuHacks, hello'")
+        var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Begin, hello'")
 
         if(!proceed) return
       }
@@ -493,20 +493,20 @@ class TextToSpeech{
 
   speakWord(word){
 
-    if(word == 'ConuHacks'){
+    if(word == 'Begin'){
       console.log("clear para")
       this.clearPara(true);
 ``
       setTimeout(() => {
-        // if no query detected after ConuHacks is signed
+        // if no query detected after Begin is signed
         if(this.currentPredictedWords.length == 1){
           this.clearPara(false)
         }
       }, this.waitTimeForQuery)
     } 
 
-    if(word != 'ConuHacks' && this.currentPredictedWords.length == 0){
-      console.log("first word should be ConuHacks")
+    if(word != 'Begin' && this.currentPredictedWords.length == 0){
+      console.log("first word should be Begin")
       console.log(word)
       return
     }
