@@ -21,3 +21,14 @@ Regarding technology: we learned using we used image processing techniques to pr
 
 ## What's next for WeTalk
 Build a Video Call Plugins for Skype, Google Meet, FaceTime and Facebook to make it easier for deaf persons to chat and communicate with anyone in this world without limitation
+
+## Features
+- [x] Facial and Hand Gesture Training and Classification
+- [x] Prediction works in varying Lighting Conditions
+- [x] Retrainable Image Classes
+- [x] Translated Text can be Copied to Clipboard
+- [x] Text to Speech of translated text
+- [x] Minimal stress on memory
+- [x] Cohesive Text Styling
+- [x] Simple User Interface
+- [x] Comprehensive Commenting
