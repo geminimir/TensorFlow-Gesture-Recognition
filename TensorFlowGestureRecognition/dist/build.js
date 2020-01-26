@@ -571,6 +571,8 @@ var TextToSpeech = function () {
 
       if(word != 'Begin') {
           this.textLine.innerText += ' ' + word;
+      } else {
+          this.textLine.innerText = '- ';
       }
 
       var utterThis = new SpeechSynthesisUtterance(word);

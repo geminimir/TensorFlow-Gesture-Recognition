@@ -9,7 +9,7 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98
 
-var words = ["Begin", "other"]
+var words = ["Begin", "Rest"]
 // var words = ["ConuHacks", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
@@ -511,7 +511,11 @@ class TextToSpeech{
 
     this.currentPredictedWords.push(word)
 
-    this.textLine.innerText += ' ' + word;
+    if(word != 'Begin') {
+          this.textLine.innerText += ' ' + word;
+      } else {
+          this.textLine.innerText = '- ';
+      }
 
 
     var utterThis = new SpeechSynthesisUtterance(word)
