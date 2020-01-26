@@ -410,8 +410,8 @@ class Main {
                 && res.classIndex != this.previousPrediction
                 && res.classIndex != words.length-1){
                   
-                this.tts.speakWord
-           (words[i])
+                this.tts.speakWord(words[i])
+
 
                 // set previous prediction so it doesnt get called again
                 this.previousPrediction = res.classIndex;
@@ -462,10 +462,6 @@ class TextToSpeech{
       return
     }
     this.voices = speechSynthesis.getVoices()
-
-    var languages = this.voices[].join();
-    console.log("Printing languages");  
-    console.log(languages);
       
     if(this.voices.indexOf(this.selectedVoice) > 0){
       console.log(`${this.voices[this.selectedVoice].name}:${this.voices[this.selectedVoice].lang}`)
@@ -493,7 +489,6 @@ class TextToSpeech{
     if(word == 'Begin'){
       console.log("clear para")
       this.clearPara(true);
-``
       setTimeout(() => {
         // if no query detected after ConuHacks is signed
         if(this.currentPredictedWords.length == 1){
@@ -508,21 +503,13 @@ class TextToSpeech{
       return
     }
 
-    // if(endWords.includes(word) && this.currentPredictedWords.length == 1 && (word != "hello" && word != "bye")){
-    //   console.log("end word detected early")
-    //   console.log(word)
-    //   return;
-    // }
-
     if(this.currentPredictedWords.includes(word)){
       // prevent word from being detected repeatedly in phrase
       console.log("word already been detected in current phrase")
       return
     }
 
-
     this.currentPredictedWords.push(word)
-
 
     this.textLine.innerText += ' ' + word;
 
