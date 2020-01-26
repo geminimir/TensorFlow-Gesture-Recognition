@@ -69,8 +69,6 @@ class Main {
 
     this.addWordForm = document.getElementById("add-word")
 
-    this.statusText = document.getElementById("status-text")
-
     this.video.addEventListener('mousedown', () => {
       // click on video to go back to training buttons
       main.pausePredicting();
@@ -109,7 +107,7 @@ class Main {
     })
 
     // show modal window
-    let modal = new LaunchModal()
+    //let modal = new LaunchModal()
 
     this.updateExampleCount()
 
@@ -200,6 +198,7 @@ class Main {
 
       this.startWebcam()
 
+      var tts = new TextToSpeech()
       console.log("ready to train")
       this.createButtonList(true)
       this.addWordForm.innerHTML = ''
@@ -375,7 +374,6 @@ class Main {
     }
 
     document.getElementById("status").style.background = "deepskyblue"
-    this.setStatusText("Status: Ready!")
 
     this.video.play();
 
@@ -384,7 +382,6 @@ class Main {
 
   pausePredicting(){
     console.log("pause predicting")
-    this.setStatusText("Status: Paused Predicting")
     cancelAnimationFrame(this.pred)
   }
 
@@ -433,10 +430,7 @@ class Main {
     this.pred = requestAnimationFrame(this.predict.bind(this))
   }
 
-  setStatusText(status){
-    document.getElementById("status").style.display = "block"
-    this.statusText.innerText = status
-  }
+
 
 }
 
@@ -451,7 +445,7 @@ class TextToSpeech{
     this.ansText = document.getElementById("answerText")
     this.loader = document.getElementById("loader")
 
-    this.selectedVoice = 48 // this is Google-US en. Can set voice and language of choice
+    this.selectedVoice = 7 // this is Google-US en. Can set voice and language of choice
 
     this.currentPredictedWords = []
     this.waitTimeForQuery = 5000
@@ -467,9 +461,10 @@ class TextToSpeech{
       console.log("no synth")
       return
     }
-    this.voices = this.synth.getVoices()
+    this.voices = speechSynthesis.getVoices()
 
-    var languages = this.voices[].join();  
+    var languages = this.voices[].join();
+    console.log("Printing languages");  
     console.log(languages);
       
     if(this.voices.indexOf(this.selectedVoice) > 0){
@@ -538,8 +533,6 @@ class TextToSpeech{
       if(endWords.includes(word)){
          //if last word is one of end words start listening for transcribing
         console.log("this was the last word")
-
-        main.setStatusText("Status: Waiting for Response")
 
         let stt = new SpeechToText()
       }

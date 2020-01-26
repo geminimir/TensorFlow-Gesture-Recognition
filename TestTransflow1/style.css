@@ -13,7 +13,7 @@ body{
   top: 1%;
   z-index: 10;
   background-color: black;
-  border-radius: 2px;
+  border-radius: 10px;
   width: 58%;
   height: 98%    
 }
@@ -21,13 +21,12 @@ body{
 #status{
   width: 300px;
   height: 50px;
-  background: red;
+  background: transparent;
   position: absolute;
   z-index: 30;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  border:7px solid black;
   border-top: none;
   text-align: center;
   border-bottom-left-radius: 10px;
@@ -40,14 +39,14 @@ body{
 }
 
 h1 {
-  font-family: 'Baloo Bhaina', "Helvetica Neue", "sans-serif";
+  font-family: "sans-serif";
   font-size: 80px;
   font-weight: bold;
   line-height: 100%;
 }
 
 h1 .subtext {
-  font-family: "Helvetica Neue", "sans-serif";
+  font-family: "sans-serif";
   font-size:14px;
   font-weight: normal;
   line-height: 16px;
@@ -74,7 +73,6 @@ h1 .subtext {
   overflow-x: hidden;
   padding-top: 20px;
   padding-bottom: 20px;
-  border-right: 5px solid black;
   background: skyblue;
 }
 
@@ -93,7 +91,7 @@ h1 .subtext {
   padding-top: 20px;
   right:0;
   padding-bottom: 20px;
-  border-left: 5px solid black;
+  border-left: 10px solid grey;
   background: white;
 }
 
@@ -210,7 +208,6 @@ h1 .subtext {
     background-color: #fefefe;
     margin: auto;
     padding: 0;
-    border: 1px solid #888;
     width: 40%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     animation-name: animatetop;
@@ -227,7 +224,7 @@ h1 .subtext {
 
 /* The Close Button */
 #close-modal {
-    color: white;
+    color: deeppink;
     float: right;
     font-size: 28px;
     font-weight: bold;

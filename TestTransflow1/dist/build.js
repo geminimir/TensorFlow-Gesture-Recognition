@@ -51,7 +51,7 @@ var LaunchModal = function LaunchModal() {
     }
   });
 
-  this.modalWindow.style.display = "block";
+  this.modalWindow.style.display = "none";
   this.modalWindow.style.zIndex = 500;
 };
 
@@ -89,7 +89,6 @@ var Main = function () {
 
     this.addWordForm = document.getElementById("add-word");
 
-    this.statusText = document.getElementById("status-text");
 
     this.video.addEventListener('mousedown', function () {
       // click on video to go back to training buttons
@@ -217,6 +216,9 @@ var Main = function () {
 
         _this4.startWebcam();
 
+
+        var voices = speechSynthesis.getVoices();  
+        console.log(voices);
         console.log("ready to train");
         _this4.createButtonList(true);
         _this4.addWordForm.innerHTML = '';
@@ -413,8 +415,6 @@ var Main = function () {
         this.stopTraining();
       }
 
-      document.getElementById("status").style.background = "deepskyblue";
-      this.setStatusText("Status: Ready!");
 
       this.video.play();
 
@@ -424,7 +424,6 @@ var Main = function () {
     key: 'pausePredicting',
     value: function pausePredicting() {
       console.log("pause predicting");
-      this.setStatusText("Status: Paused Predicting");
       cancelAnimationFrame(this.pred);
     }
   }, {
@@ -472,8 +471,7 @@ var Main = function () {
   }, {
     key: 'setStatusText',
     value: function setStatusText(status) {
-      document.getElementById("status").style.display = "block";
-      this.statusText.innerText = status;
+      document.getElementById("status").style.display = "none";
     }
   }]);
 
@@ -495,7 +493,7 @@ var TextToSpeech = function () {
     this.ansText = document.getElementById("answerText");
     this.loader = document.getElementById("loader");
 
-    this.selectedVoice = 48; // this is Google-US en. Can set voice and language of choice
+    this.selectedVoice = 7; // this is Google-US en. Can set voice and language of choice
 
     this.currentPredictedWords = [];
     this.waitTimeForQuery = 5000;
@@ -580,7 +578,6 @@ var TextToSpeech = function () {
           //if last word is one of end words start listening for transcribing
           console.log("this was the last word");
 
-          main.setStatusText("Status: Waiting for Response");
 
         }
       };
