@@ -24,7 +24,7 @@ var TOPK = 10;
 
 var predictionThreshold = 0.98;
 
-var words = ["Begin", "hello", "other"];
+var words = ["Begin", "other"];
 // var words = ["Begin", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
@@ -163,7 +163,7 @@ var Main = function () {
 
           // if wake word has not been trained
           if (exampleCount[0] == 0) {
-            alert('You haven\'t added examples for the wake word Begin');
+            alert('You haven\'t added examples for the initialization word Begin');
             return;
           }
 
@@ -315,9 +315,9 @@ var Main = function () {
       var wordText = document.createElement('span');
 
       if (i == 0 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (wake word) ";
+        wordText.innerText = words[i].toUpperCase() + " (Initialization word) ";
       } else if (i == words.length - 1 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (catchall sign) ";
+        wordText.innerText = words[i].toUpperCase() + " (rest sign) ";
       } else {
         wordText.innerText = words[i].toUpperCase() + " ";
         wordText.style.fontWeight = "bold";

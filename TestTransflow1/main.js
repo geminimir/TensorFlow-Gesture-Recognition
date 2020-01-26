@@ -9,8 +9,8 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98
 
-var words = ["Begin", "hello", "other"]
-// var words = ["Begin", "hello", "what is", "the weather", "the time",
+var words = ["Begin", "other"]
+// var words = ["ConuHacks", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
 
@@ -498,7 +498,7 @@ class TextToSpeech{
       this.clearPara(true);
 ``
       setTimeout(() => {
-        // if no query detected after Begin is signed
+        // if no query detected after ConuHacks is signed
         if(this.currentPredictedWords.length == 1){
           this.clearPara(false)
         }
@@ -506,7 +506,7 @@ class TextToSpeech{
     } 
 
     if(word != 'Begin' && this.currentPredictedWords.length == 0){
-      console.log("first word should be Begin")
+      console.log("first word should be ConuHacks")
       console.log(word)
       return
     }
