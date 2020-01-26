@@ -1,7 +1,3 @@
-// Launch in kiosk mode
-// /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --kiosk --app=http://localhost:8080
-
-
 import {KNNImageClassifier} from 'deeplearn-knn-image-classifier';
 import * as dl from 'deeplearn';
 
@@ -13,7 +9,7 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98
 
-var words = ["ConuHacks", "hello", "other"]
+var words = ["Begin", "other"]
 // var words = ["ConuHacks", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
@@ -73,8 +69,6 @@ class Main {
 
     this.addWordForm = document.getElementById("add-word")
 
-    this.statusText = document.getElementById("status-text")
-
     this.video.addEventListener('mousedown', () => {
       // click on video to go back to training buttons
       main.pausePredicting();
@@ -113,7 +107,7 @@ class Main {
     })
 
     // show modal window
-    let modal = new LaunchModal()
+    //let modal = new LaunchModal()
 
     this.updateExampleCount()
 
@@ -133,7 +127,7 @@ class Main {
     div.innerHTML = ""
     const predButton = document.createElement('button')
 
-    predButton.innerText = "Start Predicting >>>"
+    predButton.innerText = "Start Prediction"
     div.appendChild(predButton);
 
     predButton.addEventListener('mousedown', () => {
@@ -146,7 +140,7 @@ class Main {
         // if wake word has not been trained
         if(exampleCount[0] == 0){
           alert(
-            `You haven't added examples for the wake word ConuHacks`
+            `You haven't added examples for the wake word Begin`
             )
           return
         }
@@ -168,7 +162,7 @@ class Main {
 
         this.trainingListDiv.style.display = "none"
         this.textLine.classList.remove("intro-steps")
-        this.textLine.innerText = "Sign your query"
+        this.textLine.innerText = ""
         this.startPredicting()
       } else {
         alert(
@@ -183,7 +177,7 @@ class Main {
     div.innerHTML = ""
 
     const trainButton = document.createElement('button')
-    trainButton.innerText = "Training >>>"
+    trainButton.innerText = "Start Training"
     div.appendChild(trainButton);
 
 
@@ -192,35 +186,33 @@ class Main {
       // check if user has added atleast one terminal word
       if(words.length > 3 && endWords.length == 1){
         console.log('no terminal word added')
-        alert(`You have not added any terminal words.\nCurrently the only query you can make is "ConuHacks, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`)
+        alert(`You have not added any terminal words.\nCurrently the only query you can make is "Begin, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`)
         return
       }
 
       if(words.length == 3 && endWords.length ==1){
-        var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'ConuHacks, hello'")
+        var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Begin, hello'")
 
         if(!proceed) return
       }
 
       this.startWebcam()
 
+      var tts = new TextToSpeech()
       console.log("ready to train")
       this.createButtonList(true)
       this.addWordForm.innerHTML = ''
       let p = document.createElement('p')
-      p.innerText = `Perform the appropriate sign while holding down the ADD EXAMPLE button near each word to capture atleast 30 training examples for each word
-
-      For OTHER, capture yourself in an idle state to act as a catchall sign. e.g hands down by your side`
       this.addWordForm.appendChild(p)
       
       this.loadKNN()
 
       this.createPredictBtn()
 
-      this.textLine.innerText = "Step 2: Train"
+      this.textLine.innerText = ""
 
       let subtext = document.createElement('span')
-      subtext.innerHTML = "<br/>Time to associate signs with the words" 
+      subtext.innerHTML = "" 
       subtext.classList.add('subtext')
       this.textLine.appendChild(subtext)
 
@@ -319,7 +311,7 @@ class Main {
       btn.addEventListener('mousedown', () => {
         console.log("clear training data for this label")
         this.knn.clearClass(i)
-        this.infoTexts[i].innerText = " 0 examples"
+        this.infoTexts[i].innerText = " 0 "
       })
       
       // Create info text
@@ -367,7 +359,7 @@ class Main {
       if(Math.max(...exampleCount) > 0){
         for(let i=0;i<words.length;i++){
           if(exampleCount[i] > 0){
-            this.infoTexts[i].innerText = ` ${exampleCount[i]} examples`
+            this.infoTexts[i].innerText = ` ${exampleCount[i]}`
           }
         }
       }
@@ -382,7 +374,6 @@ class Main {
     }
 
     document.getElementById("status").style.background = "deepskyblue"
-    this.setStatusText("Status: Ready!")
 
     this.video.play();
 
@@ -391,7 +382,6 @@ class Main {
 
   pausePredicting(){
     console.log("pause predicting")
-    this.setStatusText("Status: Paused Predicting")
     cancelAnimationFrame(this.pred)
   }
 
@@ -419,8 +409,9 @@ class Main {
                 && res.confidences[i] > predictionThreshold 
                 && res.classIndex != this.previousPrediction
                 && res.classIndex != words.length-1){
-
-                this.tts.speak(words[i])
+                  
+                this.tts.speakWord
+           (words[i])
 
                 // set previous prediction so it doesnt get called again
                 this.previousPrediction = res.classIndex;
@@ -439,10 +430,7 @@ class Main {
     this.pred = requestAnimationFrame(this.predict.bind(this))
   }
 
-  setStatusText(status){
-    document.getElementById("status").style.display = "block"
-    this.statusText.innerText = status
-  }
+
 
 }
 
@@ -457,11 +445,10 @@ class TextToSpeech{
     this.ansText = document.getElementById("answerText")
     this.loader = document.getElementById("loader")
 
-    this.selectedVoice = 48 // this is Google-US en. Can set voice and language of choice
+    this.selectedVoice = 7 // this is Google-US en. Can set voice and language of choice
 
     this.currentPredictedWords = []
     this.waitTimeForQuery = 5000
-
 
     this.synth.onvoiceschanged = () => {
       this.populateVoiceList()
@@ -474,8 +461,12 @@ class TextToSpeech{
       console.log("no synth")
       return
     }
-    this.voices = this.synth.getVoices()
+    this.voices = speechSynthesis.getVoices()
 
+    var languages = this.voices[].join();
+    console.log("Printing languages");  
+    console.log(languages);
+      
     if(this.voices.indexOf(this.selectedVoice) > 0){
       console.log(`${this.voices[this.selectedVoice].name}:${this.voices[this.selectedVoice].lang}`)
     } else {
@@ -497,9 +488,9 @@ class TextToSpeech{
     this.currentPredictedWords = []
   }
 
-  speak(word){
+  speakWord(word){
 
-    if(word == 'ConuHacks'){
+    if(word == 'Begin'){
       console.log("clear para")
       this.clearPara(true);
 ``
@@ -511,7 +502,7 @@ class TextToSpeech{
       }, this.waitTimeForQuery)
     } 
 
-    if(word != 'ConuHacks' && this.currentPredictedWords.length == 0){
+    if(word != 'Begin' && this.currentPredictedWords.length == 0){
       console.log("first word should be ConuHacks")
       console.log(word)
       return
@@ -543,8 +534,6 @@ class TextToSpeech{
          //if last word is one of end words start listening for transcribing
         console.log("this was the last word")
 
-        main.setStatusText("Status: Waiting for Response")
-
         let stt = new SpeechToText()
       }
     }
@@ -557,7 +546,7 @@ class TextToSpeech{
 
     utterThis.pitch = this.pitch
     utterThis.rate = this.rate
-
+    utterThis.lang = this.lang  
     this.synth.speak(utterThis)
 
   }
@@ -581,4 +570,3 @@ window.addEventListener('load', () => {
   main = new Main()
 
 });
-

@@ -24,8 +24,8 @@ var TOPK = 10;
 
 var predictionThreshold = 0.98;
 
-var words = ["alexa", "hello", "other"];
-// var words = ["alexa", "hello", "what is", "the weather", "the time",
+var words = ["Begin", "other"];
+// var words = ["Begin", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
 
@@ -51,7 +51,7 @@ var LaunchModal = function LaunchModal() {
     }
   });
 
-  this.modalWindow.style.display = "block";
+  this.modalWindow.style.display = "none";
   this.modalWindow.style.zIndex = 500;
 };
 
@@ -89,7 +89,6 @@ var Main = function () {
 
     this.addWordForm = document.getElementById("add-word");
 
-    this.statusText = document.getElementById("status-text");
 
     this.video.addEventListener('mousedown', function () {
       // click on video to go back to training buttons
@@ -151,7 +150,7 @@ var Main = function () {
       div.innerHTML = "";
       var predButton = document.createElement('button');
 
-      predButton.innerText = "Start Predicting >>>";
+      predButton.innerText = "Start Prediction";
       div.appendChild(predButton);
 
       predButton.addEventListener('mousedown', function () {
@@ -163,7 +162,7 @@ var Main = function () {
 
           // if wake word has not been trained
           if (exampleCount[0] == 0) {
-            alert('You haven\'t added examples for the wake word ALEXA');
+            alert('You haven\'t added examples for the initialization word Begin');
             return;
           }
 
@@ -181,7 +180,7 @@ var Main = function () {
 
           _this3.trainingListDiv.style.display = "none";
           _this3.textLine.classList.remove("intro-steps");
-          _this3.textLine.innerText = "Sign your query";
+          _this3.textLine.innerText = "";
           _this3.startPredicting();
         } else {
           alert('You haven\'t added any examples yet.\n\nPress and hold on the "Add Example" button next to each word while performing the sign in front of the webcam.');
@@ -197,7 +196,7 @@ var Main = function () {
       div.innerHTML = "";
 
       var trainButton = document.createElement('button');
-      trainButton.innerText = "Training >>>";
+      trainButton.innerText = "Start Training";
       div.appendChild(trainButton);
 
       trainButton.addEventListener('mousedown', function () {
@@ -205,33 +204,36 @@ var Main = function () {
         // check if user has added atleast one terminal word
         if (words.length > 3 && endWords.length == 1) {
           console.log('no terminal word added');
-          alert('You have not added any terminal words.\nCurrently the only query you can make is "Alexa, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What\'s the weather" & "What\'s the time" then add "the weather" and "the time" as terminal words. "What\'s" on the other hand is not a terminal word.');
+          alert('You have not added any terminal words.\nCurrently the only query you can make is "Begin, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What\'s the weather" & "What\'s the time" then add "the weather" and "the time" as terminal words. "What\'s" on the other hand is not a terminal word.');
           return;
         }
 
         if (words.length == 3 && endWords.length == 1) {
-          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Alexa, hello'");
+          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Begin, hello'");
 
           if (!proceed) return;
         }
 
         _this4.startWebcam();
 
+
+        var voices = speechSynthesis.getVoices();  
+        console.log(voices);
         console.log("ready to train");
         _this4.createButtonList(true);
         _this4.addWordForm.innerHTML = '';
         var p = document.createElement('p');
-        p.innerText = 'Perform the appropriate sign while holding down the ADD EXAMPLE button near each word to capture atleast 30 training examples for each word\n\n      For OTHER, capture yourself in an idle state to act as a catchall sign. e.g hands down by your side';
+        p.innerText = '';
         _this4.addWordForm.appendChild(p);
 
         _this4.loadKNN();
 
         _this4.createPredictBtn();
 
-        _this4.textLine.innerText = "Step 2: Train";
+        _this4.textLine.innerText = "";
 
         var subtext = document.createElement('span');
-        subtext.innerHTML = "<br/>Time to associate signs with the words";
+        subtext.innerHTML = "";
         subtext.classList.add('subtext');
         _this4.textLine.appendChild(subtext);
       });
@@ -315,9 +317,9 @@ var Main = function () {
       var wordText = document.createElement('span');
 
       if (i == 0 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (wake word) ";
+        wordText.innerText = words[i].toUpperCase() + " (Initialization word) ";
       } else if (i == words.length - 1 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (catchall sign) ";
+        wordText.innerText = words[i].toUpperCase() + " (rest sign) ";
       } else {
         wordText.innerText = words[i].toUpperCase() + " ";
         wordText.style.fontWeight = "bold";
@@ -347,12 +349,12 @@ var Main = function () {
         btn.addEventListener('mousedown', function () {
           console.log("clear training data for this label");
           _this7.knn.clearClass(i);
-          _this7.infoTexts[i].innerText = " 0 examples";
+          _this7.infoTexts[i].innerText = " 0";
         });
 
         // Create info text
         var infoText = document.createElement('span');
-        infoText.innerText = " 0 examples";
+        infoText.innerText = " 0";
         div.appendChild(infoText);
         this.infoTexts.push(infoText);
       }
@@ -398,7 +400,7 @@ var Main = function () {
         if (Math.max.apply(Math, _toConsumableArray(exampleCount)) > 0) {
           for (var i = 0; i < words.length; i++) {
             if (exampleCount[i] > 0) {
-              this.infoTexts[i].innerText = ' ' + exampleCount[i] + ' examples';
+              this.infoTexts[i].innerText = ' ' + exampleCount[i] + '';
             }
           }
         }
@@ -413,8 +415,6 @@ var Main = function () {
         this.stopTraining();
       }
 
-      document.getElementById("status").style.background = "deepskyblue";
-      this.setStatusText("Status: Ready!");
 
       this.video.play();
 
@@ -424,7 +424,6 @@ var Main = function () {
     key: 'pausePredicting',
     value: function pausePredicting() {
       console.log("pause predicting");
-      this.setStatusText("Status: Paused Predicting");
       cancelAnimationFrame(this.pred);
     }
   }, {
@@ -472,8 +471,7 @@ var Main = function () {
   }, {
     key: 'setStatusText',
     value: function setStatusText(status) {
-      document.getElementById("status").style.display = "block";
-      this.statusText.innerText = status;
+      document.getElementById("status").style.display = "none";
     }
   }]);
 
@@ -495,7 +493,7 @@ var TextToSpeech = function () {
     this.ansText = document.getElementById("answerText");
     this.loader = document.getElementById("loader");
 
-    this.selectedVoice = 48; // this is Google-US en. Can set voice and language of choice
+    this.selectedVoice = 7; // this is Google-US en. Can set voice and language of choice
 
     this.currentPredictedWords = [];
     this.waitTimeForQuery = 5000;
@@ -539,20 +537,20 @@ var TextToSpeech = function () {
     value: function speak(word) {
       var _this10 = this;
 
-      if (word == 'alexa') {
+      if (word == 'Begin') {
         console.log("clear para");
         this.clearPara(true);
 
         setTimeout(function () {
-          // if no query detected after alexa is signed
+          // if no query detected after Begin is signed
           if (_this10.currentPredictedWords.length == 1) {
             _this10.clearPara(false);
           }
         }, this.waitTimeForQuery);
       }
 
-      if (word != 'alexa' && this.currentPredictedWords.length == 0) {
-        console.log("first word should be alexa");
+      if (word != 'Begin' && this.currentPredictedWords.length == 0) {
+        console.log("first word should be Begin");
         console.log(word);
         return;
       }
@@ -580,9 +578,7 @@ var TextToSpeech = function () {
           //if last word is one of end words start listening for transcribing
           console.log("this was the last word");
 
-          main.setStatusText("Status: Waiting for Response");
 
-          var stt = new SpeechToText();
         }
       };
 
@@ -590,11 +586,10 @@ var TextToSpeech = function () {
         console.log("Error speaking");
       };
 
-      utterThis.voice = this.voices[this.selectedVoice];
-
+      utterThis.voice = this.voices[this.selectedVoice];    
       utterThis.pitch = this.pitch;
       utterThis.rate = this.rate;
-
+      utterThis.lang = this.lang;    
       this.synth.speak(utterThis);
     }
   }]);
@@ -602,121 +597,6 @@ var TextToSpeech = function () {
   return TextToSpeech;
 }();
 
-var SpeechToText = function () {
-  function SpeechToText() {
-    var _this11 = this;
-
-    _classCallCheck(this, SpeechToText);
-
-    this.interimTextLine = document.getElementById("interimText");
-    this.textLine = document.getElementById("answerText");
-    this.loader = document.getElementById("loader");
-    this.finalTranscript = '';
-    this.recognizing = false;
-
-    this.recognition = new webkitSpeechRecognition();
-
-    this.recognition.continuous = true;
-    this.recognition.interimResults = true;
-
-    this.recognition.lang = 'en-US';
-
-    this.cutOffTime = 15000; // cut off speech to text after
-
-    this.recognition.onstart = function () {
-      _this11.recognizing = true;
-      console.log("started recognizing");
-      main.setStatusText("Status: Transcribing");
-    };
-
-    this.recognition.onerror = function (evt) {
-      console.log(evt + " recogn error");
-    };
-
-    this.recognition.onend = function () {
-      console.log("stopped recognizing");
-      if (_this11.finalTranscript.length == 0) {
-        _this11.type("No response detected");
-      }
-      _this11.recognizing = false;
-
-      main.setStatusText("Status: Finished Transcribing");
-      // restart prediction after a pause
-      setTimeout(function () {
-        main.startPredicting();
-      }, 1000);
-    };
-
-    this.recognition.onresult = function (event) {
-      var interim_transcript = '';
-      if (typeof event.results == 'undefined') {
-        return;
-      }
-
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          _this11.finalTranscript += event.results[i][0].transcript;
-        } else {
-          interim_transcript += event.results[i][0].transcript;
-        }
-      }
-
-      _this11.interimType(interim_transcript);
-      _this11.type(_this11.finalTranscript);
-    };
-
-    setTimeout(function () {
-      _this11.startListening();
-    }, 0);
-
-    setTimeout(function () {
-      _this11.stopListening();
-    }, this.cutOffTime);
-  }
-
-  _createClass(SpeechToText, [{
-    key: 'startListening',
-    value: function startListening() {
-      if (this.recognizing) {
-        this.recognition.stop();
-        return;
-      }
-
-      console.log("listening");
-
-      main.pausePredicting();
-
-      this.recognition.start();
-    }
-  }, {
-    key: 'stopListening',
-    value: function stopListening() {
-      console.log("STOP LISTENING");
-      if (this.recognizing) {
-        console.log("stop speech to text");
-        this.recognition.stop();
-
-        //restart predicting
-        main.startPredicting();
-        return;
-      }
-    }
-  }, {
-    key: 'interimType',
-    value: function interimType(text) {
-      this.loader.style.display = "none";
-      this.interimTextLine.innerText = text;
-    }
-  }, {
-    key: 'type',
-    value: function type(text) {
-      this.loader.style.display = "none";
-      this.textLine.innerText = text;
-    }
-  }]);
-
-  return SpeechToText;
-}();
 
 var main = null;
 
