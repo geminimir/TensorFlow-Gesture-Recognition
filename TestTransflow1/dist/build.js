@@ -151,7 +151,7 @@ var Main = function () {
       div.innerHTML = "";
       var predButton = document.createElement('button');
 
-      predButton.innerText = "Start Predicting";
+      predButton.innerText = "Start Prediction";
       div.appendChild(predButton);
 
       predButton.addEventListener('mousedown', function () {
@@ -181,7 +181,7 @@ var Main = function () {
 
           _this3.trainingListDiv.style.display = "none";
           _this3.textLine.classList.remove("intro-steps");
-          _this3.textLine.innerText = "Sign your query";
+          _this3.textLine.innerText = "";
           _this3.startPredicting();
         } else {
           alert('You haven\'t added any examples yet.\n\nPress and hold on the "Add Example" button next to each word while performing the sign in front of the webcam.');
@@ -228,10 +228,10 @@ var Main = function () {
 
         _this4.createPredictBtn();
 
-        _this4.textLine.innerText = "Step 2: Train";
+        _this4.textLine.innerText = "";
 
         var subtext = document.createElement('span');
-        subtext.innerHTML = "<br/>Time to associate signs with the words";
+        subtext.innerHTML = "";
         subtext.classList.add('subtext');
         _this4.textLine.appendChild(subtext);
       });
@@ -347,12 +347,12 @@ var Main = function () {
         btn.addEventListener('mousedown', function () {
           console.log("clear training data for this label");
           _this7.knn.clearClass(i);
-          _this7.infoTexts[i].innerText = " 0 examples";
+          _this7.infoTexts[i].innerText = " 0";
         });
 
         // Create info text
         var infoText = document.createElement('span');
-        infoText.innerText = " 0 examples";
+        infoText.innerText = " 0";
         div.appendChild(infoText);
         this.infoTexts.push(infoText);
       }
@@ -398,7 +398,7 @@ var Main = function () {
         if (Math.max.apply(Math, _toConsumableArray(exampleCount)) > 0) {
           for (var i = 0; i < words.length; i++) {
             if (exampleCount[i] > 0) {
-              this.infoTexts[i].innerText = ' ' + exampleCount[i] + ' examples';
+              this.infoTexts[i].innerText = ' ' + exampleCount[i] + '';
             }
           }
         }
@@ -582,7 +582,6 @@ var TextToSpeech = function () {
 
           main.setStatusText("Status: Waiting for Response");
 
-          var stt = new SpeechToText();
         }
       };
 
@@ -590,11 +589,10 @@ var TextToSpeech = function () {
         console.log("Error speaking");
       };
 
-      utterThis.voice = this.voices[this.selectedVoice];
-
+      utterThis.voice = this.voices[this.selectedVoice];    
       utterThis.pitch = this.pitch;
       utterThis.rate = this.rate;
-      utterThis.lang = 'en-US'    
+      utterThis.lang = this.lang;    
       this.synth.speak(utterThis);
     }
   }]);
@@ -602,121 +600,6 @@ var TextToSpeech = function () {
   return TextToSpeech;
 }();
 
-var SpeechToText = function () {
-  function SpeechToText() {
-    var _this11 = this;
-
-    _classCallCheck(this, SpeechToText);
-
-    this.interimTextLine = document.getElementById("interimText");
-    this.textLine = document.getElementById("answerText");
-    this.loader = document.getElementById("loader");
-    this.finalTranscript = '';
-    this.recognizing = false;
-
-    this.recognition = new webkitSpeechRecognition();
-
-    this.recognition.continuous = true;
-    this.recognition.interimResults = true;
-
-    this.recognition.lang = 'en-US';
-
-    this.cutOffTime = 15000; // cut off speech to text after
-
-    this.recognition.onstart = function () {
-      _this11.recognizing = true;
-      console.log("started recognizing");
-      main.setStatusText("Status: Transcribing");
-    };
-
-    this.recognition.onerror = function (evt) {
-      console.log(evt + " recogn error");
-    };
-
-    this.recognition.onend = function () {
-      console.log("stopped recognizing");
-      if (_this11.finalTranscript.length == 0) {
-        _this11.type("No response detected");
-      }
-      _this11.recognizing = false;
-
-      main.setStatusText("Status: Finished Transcribing");
-      // restart prediction after a pause
-      setTimeout(function () {
-        main.startPredicting();
-      }, 1000);
-    };
-
-    this.recognition.onresult = function (event) {
-      var interim_transcript = '';
-      if (typeof event.results == 'undefined') {
-        return;
-      }
-
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          _this11.finalTranscript += event.results[i][0].transcript;
-        } else {
-          interim_transcript += event.results[i][0].transcript;
-        }
-      }
-
-      _this11.interimType(interim_transcript);
-      _this11.type(_this11.finalTranscript);
-    };
-
-    setTimeout(function () {
-      _this11.startListening();
-    }, 0);
-
-    setTimeout(function () {
-      _this11.stopListening();
-    }, this.cutOffTime);
-  }
-
-  _createClass(SpeechToText, [{
-    key: 'startListening',
-    value: function startListening() {
-      if (this.recognizing) {
-        this.recognition.stop();
-        return;
-      }
-
-      console.log("listening");
-
-      main.pausePredicting();
-
-      this.recognition.start();
-    }
-  }, {
-    key: 'stopListening',
-    value: function stopListening() {
-      console.log("STOP LISTENING");
-      if (this.recognizing) {
-        console.log("stop speech to text");
-        this.recognition.stop();
-
-        //restart predicting
-        main.startPredicting();
-        return;
-      }
-    }
-  }, {
-    key: 'interimType',
-    value: function interimType(text) {
-      this.loader.style.display = "none";
-      this.interimTextLine.innerText = text;
-    }
-  }, {
-    key: 'type',
-    value: function type(text) {
-      this.loader.style.display = "none";
-      this.textLine.innerText = text;
-    }
-  }]);
-
-  return SpeechToText;
-}();
 
 var main = null;
 

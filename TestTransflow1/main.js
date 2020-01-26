@@ -129,7 +129,7 @@ class Main {
     div.innerHTML = ""
     const predButton = document.createElement('button')
 
-    predButton.innerText = "Start Predicting"
+    predButton.innerText = "Start Prediction"
     div.appendChild(predButton);
 
     predButton.addEventListener('mousedown', () => {
@@ -164,7 +164,7 @@ class Main {
 
         this.trainingListDiv.style.display = "none"
         this.textLine.classList.remove("intro-steps")
-        this.textLine.innerText = "Sign your query"
+        this.textLine.innerText = ""
         this.startPredicting()
       } else {
         alert(
@@ -210,10 +210,10 @@ class Main {
 
       this.createPredictBtn()
 
-      this.textLine.innerText = "Step 2: Train"
+      this.textLine.innerText = ""
 
       let subtext = document.createElement('span')
-      subtext.innerHTML = "<br/>Time to associate signs with the words" 
+      subtext.innerHTML = "" 
       subtext.classList.add('subtext')
       this.textLine.appendChild(subtext)
 
@@ -456,7 +456,6 @@ class TextToSpeech{
     this.currentPredictedWords = []
     this.waitTimeForQuery = 5000
 
-
     this.synth.onvoiceschanged = () => {
       this.populateVoiceList()
     }
@@ -470,6 +469,9 @@ class TextToSpeech{
     }
     this.voices = this.synth.getVoices()
 
+    var languages = this.voices[].join();  
+    console.log(languages);
+      
     if(this.voices.indexOf(this.selectedVoice) > 0){
       console.log(`${this.voices[this.selectedVoice].name}:${this.voices[this.selectedVoice].lang}`)
     } else {
@@ -551,7 +553,7 @@ class TextToSpeech{
 
     utterThis.pitch = this.pitch
     utterThis.rate = this.rate
-    utterThis.lang = 'en-US'  
+    utterThis.lang = this.lang  
     this.synth.speak(utterThis)
 
   }
