@@ -258,7 +258,7 @@ class Main {
 
   updateExampleCount(){
     var p = document.getElementById('count')
-    p.innerText = `Training: ${words.length} words`
+    //p.innerText = `Training: ${words.length} words`
   }
 
   createButtonList(showBtn){

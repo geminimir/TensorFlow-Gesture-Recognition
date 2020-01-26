@@ -24,7 +24,7 @@ var TOPK = 10;
 
 var predictionThreshold = 0.98;
 
-var words = ["Begin", "other"];
+var words = ["Begin", "Rest"];
 // var words = ["Begin", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
@@ -289,7 +289,7 @@ var Main = function () {
     key: 'updateExampleCount',
     value: function updateExampleCount() {
       var p = document.getElementById('count');
-      p.innerText = 'Training: ' + words.length + ' words';
+      //p.innerText = 'Training: ' + words.length + ' words';
     }
   }, {
     key: 'createButtonList',
@@ -538,7 +538,7 @@ var TextToSpeech = function () {
       var _this10 = this;
 
       if (word == 'Begin') {
-        console.log("clear para");
+        console.log("Clear");
         this.clearPara(true);
 
         setTimeout(function () {
@@ -569,7 +569,9 @@ var TextToSpeech = function () {
 
       this.currentPredictedWords.push(word);
 
-      this.textLine.innerText += ' ' + word;
+      if(word != 'Begin') {
+          this.textLine.innerText += ' ' + word;
+      }
 
       var utterThis = new SpeechSynthesisUtterance(word);
 

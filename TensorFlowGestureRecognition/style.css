@@ -1,5 +1,5 @@
 body{
-  font-family: "sans-serif";
+  font-family: "Helvetica Neue", "sans-serif";
   margin: 0;
   padding: 0;
 }
@@ -9,13 +9,13 @@ body{
   -webkit-transform:rotateY(180deg); /* Safari and Chrome */
   -moz-transform:rotateY(180deg); /* Firefox */
   position: absolute;
-  left: 41%;
-  top: 1%;
+  left: 40.5%;
+  top: 0.5%;
   z-index: 10;
   background-color: black;
   border-radius: 10px;
-  width: 58%;
-  height: 98%    
+  width: 59.2%;
+  height: 99%    
 }
 
 #status{
@@ -39,14 +39,14 @@ body{
 }
 
 h1 {
-  font-family: "sans-serif";
+  font-family: "Helvetica Neue", "sans-serif";
   font-size: 80px;
   font-weight: bold;
   line-height: 100%;
 }
 
 h1 .subtext {
-  font-family: "sans-serif";
+  font-family: "Helvetica Neue", "sans-serif";
   font-size:14px;
   font-weight: normal;
   line-height: 16px;
@@ -105,6 +105,11 @@ h1 .subtext {
   width:75%;
 }
 
+.title {
+    font-family: cursive;
+    font-size: 80px;
+    margin-top: 0px;
+}
 #info {
   margin-bottom: 30px;
 }
