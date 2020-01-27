@@ -1,4 +1,4 @@
-# WeTalk
+# TensorFlow-Gesture-Recognition
 ## Inspiration
 Being a friend with a deaf person makes us appreciate how much communication is important and needs it in our daily bases tasks. As Software Engineers we believe that technology comes to solve problems and makes everything easier.
 The technology was never limited to young and smart people, with Technology no discrimination
